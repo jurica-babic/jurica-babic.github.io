@@ -1,90 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>&lt;model-viewer&gt; Augmented Reality</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, user-scalable=no,
-  minimum-scale=1.0, maximum-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-
-  <!-- 💁 Include both scripts below to support all browsers! -->
-
-  <!-- Loads <model-viewer> for modern browsers: -->
-  <script type="module"
-      src="https://unpkg.com/@google/model-viewer/dist/model-viewer.js">
-  </script>
-
-  <!-- Loads <model-viewer> for old browsers like IE11: -->
-  <script nomodule
-      src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js">
-  </script>
-
-  <!-- The following libraries and polyfills are recommended to maximize browser support -->
-  <!-- NOTE: you must adjust the paths as appropriate for your project -->
+<!doctype html>  
+<head>  
+   <!-- Includes for ADL's xAPI Wrapper -->  
+   <!-- Download the files from: -->  
+   <!-- https://github.com/adlnet/xAPIWrapper -->  
+   <script type="text/javascript" src="./js/cryptojs_v3.1.2.js"></script>  
+    <script type="text/javascript" src="./js/xapiwrapper.min.js"></script>  
+    <!------------------------------------->      
       
-  <!-- 🚨 REQUIRED: Web Components polyfill to support Edge and Firefox < 63 -->
-  <script src="https://unpkg.com/@webcomponents/webcomponentsjs@2.1.3/webcomponents-loader.js"></script>
-
-  <!-- 💁 OPTIONAL: Intersection Observer polyfill for better performance in Safari and IE11 -->
-  <script src="https://unpkg.com/intersection-observer@0.5.1/intersection-observer.js"></script>
-
-  <!-- 💁 OPTIONAL: Resize Observer polyfill improves resize behavior in non-Chrome browsers -->
-  <script src="https://unpkg.com/resize-observer-polyfill@1.5.1/dist/ResizeObserver.js"></script>
-
-  <!-- 💁 OPTIONAL: Fullscreen polyfill is required for experimental AR features in Canary -->
-  <!--<script src="https://unpkg.com/fullscreen-polyfill@1.0.2/dist/fullscreen.polyfill.js"></script>-->
-
-  <!-- 💁 OPTIONAL: Include prismatic.js for Magic Leap support -->
-  <!--<script src="https://unpkg.com/@magicleap/prismatic@0.18.2/prismatic.min.js"></script>-->
-
-</head>
-<body>
+    <script>  
+    function send_statement(){  
+        var conf = {  
+             "endpoint" : "http://161.53.19.147/data/xAPI",  
+             "auth" : "Basic " + toBase64("60c87dab8380173004cb8c7cd2e94ba375b8ecd4:f4af6cfb6d367485f5f1e5a224589f802077c973")  
+             };  
   
-    <model-viewer src="assets/bozic.glb" 
-                ar
-                autoplay 
-                auto-rotate 
-                camera-controls 
-                shadow-intensity="1" 
-                alt="Test" background-color="#70BCD1">
-                  
-      </model-viewer>
+        ADL.XAPIWrapper.changeConfig(conf);  
+           
+        //define the xapi statement being sent  
+        var statement = {  
+            "actor": {  
+                "mbox": "mailto:jurica@fer.com",  
+                "name": "Jurica",  
+                "objectType": "Agent"  
+            },  
+            "verb": {  
+                "id": "http://example.com/xapi/interacted",  
+                "display": {"en-US": "interacted"}  
+            },  
+            "object": {  
+                "id": "http://example.com/button_example",  
+                "definition": {  
+                    "name": {"en-US": "Button example"},  
+                    "description": {"en-US": "Example xAPI Button"}  
+                },  
+                "objectType": "Activity"  
+            }  
+        }; //end statement definition  
+   
+        // Dispatch the statement to the LRS  
+        var result = ADL.XAPIWrapper.sendStatement(statement);  
+        }  
+    </script>  
   
-    <model-viewer src="assets/bor.glb" 
-                ar
-                autoplay 
-                auto-rotate 
-                camera-controls 
-                shadow-intensity="1" 
-                alt="Test" background-color="#70BCD1">
-                  
-      </model-viewer>
+</head>  
   
-    <model-viewer src="assets/brate.glb" 
-                ar
-                ar-scale="0.1"
-                autoplay 
-                auto-rotate 
-                camera-controls 
-                shadow-intensity="1" 
-                alt="Test" background-color="#70BCD1">
-  
-   <!-- 
-  
-
-                  
-      </model-viewer>
-     
-  <model-viewer src="assets/RocketShip_1393.gltf" 
-                ios-src="assets/RocketShip_1393.usdz"
-                ar
-                auto-rotate 
-                camera-controls 
-                shadow-intensity="1" 
-                alt="A 3D model of a rocket" background-color="#70BCD1">
-                  
-  </model-viewer>
-
--->
-</body>
-</html>
+<body>  
+    <button type="button" onclick="send_statement()">Send Statements</button>  
+</body>  
+</html>  
